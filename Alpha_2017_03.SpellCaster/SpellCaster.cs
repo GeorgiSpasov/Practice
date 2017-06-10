@@ -11,8 +11,7 @@ namespace Alpha_2017_03.SpellCaster
         static void Main(string[] args)
         {
             // Step 1 ============================================================
-            //string[] words = Console.ReadLine().Split(' ');
-            string[] words = "Fun exam right".Split(' ');
+            string[] words = Console.ReadLine().Split(' ');
             StringBuilder appended = new StringBuilder();
 
             int longest = words.OrderBy(w => w.Length).Last().Length;
@@ -28,21 +27,29 @@ namespace Alpha_2017_03.SpellCaster
                 }
             }
             
-            Console.WriteLine(appended);
-
             // Step 2 ============================================================
 
-            foreach (char c in appended.ToString())
+            char currentChar = ' ';
+            int charNumber = 0;
+            int shift = 0;
+
+            for (int i = 0; i < appended.Length; i++)
             {
+                currentChar = appended.ToString()[i];
+                charNumber = appended.ToString().ToLower()[i] - 96;
+                if ((charNumber % appended.Length + i) < appended.Length)
+                {
+                    shift = charNumber % appended.Length + i;
+                }
+                else
+                {
+                    shift = charNumber % appended.Length + i - appended.Length;
+                }
 
+                appended.Remove(i, 1);
+                appended.Insert(shift, currentChar);
             }
-
-            -96
-            Console.WriteLine((int)'a');
-
-
-
-
+            Console.WriteLine(appended);
         }
     }
 }
