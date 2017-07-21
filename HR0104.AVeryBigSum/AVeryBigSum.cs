@@ -5,7 +5,7 @@ namespace HR0104.AVeryBigSum
 {
     class AVeryBigSum
     {
-        static long aVeryBigSum(int n, long[] ar)
+        static long BigSum(int n, long[] ar)
         {
             // Complete this function
             return ar.Sum();
@@ -14,9 +14,9 @@ namespace HR0104.AVeryBigSum
         static void Main(String[] args)
         {
             int n = Convert.ToInt32(Console.ReadLine());
-            string[] ar_temp = Console.ReadLine().Split(' ');
-            long[] ar = Array.ConvertAll(ar_temp, Int64.Parse);
-            long result = aVeryBigSum(n, ar);
+            string[] arTemp = Console.ReadLine().Split(' ');
+            long[] ar = Array.ConvertAll(arTemp, Int64.Parse);
+            long result = BigSum(n, ar);
             Console.WriteLine(result);
         }
     }
