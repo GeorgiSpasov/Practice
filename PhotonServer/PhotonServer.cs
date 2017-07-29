@@ -58,12 +58,20 @@ namespace TcpServer
             bool clientConnected = true;
             string data = null;
 
-            // Status read
+            // Client status read
             data = sReader.ReadLine();
             Console.WriteLine(data);
 
+            // Connection confirmation
+            sWriter.WriteLine("Your client is connected to Photon server!"); //->add reader to client
+            sWriter.Flush();
+
+
             // Player authentication
             string playerName = PlayerAuthentication(sReader); // Could throw exception!!!
+
+            int i = 0;
+
 
             while (clientConnected)
             {
@@ -81,9 +89,10 @@ namespace TcpServer
                         client.Close();
                         clientConnected = false;
                     }
+
                     // to write something back.
-                    //sWriter.WriteLine(Console.ReadLine()); ->add reader to client
-                    //sWriter.Flush();
+                    sWriter.WriteLine("server test data: " + ((i++) % 10)); //->add reader to client
+                    sWriter.Flush();
                     Thread.Sleep(200); //Match game speed!!!!!=================
                 }
                 catch (Exception)

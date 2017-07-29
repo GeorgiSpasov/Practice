@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{86F617FA-2998-416E-9DC3-2F8711C8E078}</ProjectGuid>
+    <ProjectGuid>{7A7DA579-AF5E-4524-ACC3-3E8B0E348C7D}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>PhotonClient</RootNamespace>
     <AssemblyName>PhotonClient</AssemblyName>
@@ -42,7 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PhotonClient.cs" />
+    <Compile Include="Client.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

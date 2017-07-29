@@ -53,9 +53,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ClientDemo\ClientDemo.csproj">
+    <ProjectReference Include="..\PhotonClient\PhotonClient.csproj">
       <Project>{7a7da579-af5e-4524-acc3-3e8b0e348c7d}</Project>
-      <Name>ClientDemo</Name>
+      <Name>PhotonClient</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

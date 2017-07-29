@@ -8,27 +8,26 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClientDemo
+namespace PhotonClient
 {
-    public class ClientDemo
+    public class Client
     {
         private TcpClient client;
         private IPAddress ip; // Store it in a configuration file
         private int port;
         private StreamReader sReader;
         private StreamWriter sWriter;
-        private Boolean isConnected;
 
-        public ClientDemo(string ip = "127.0.0.1", int port = 5555)
+        public Client(string ip = "127.0.0.1", int port = 5555)
         {
             this.ip = IPAddress.Parse(ip);
             this.port = port;
             this.client = new TcpClient();
-            this.RunClient();
+            this.ConnectClient();
             this.HandleCommunication();
         }
 
-        public void RunClient()
+        public void ConnectClient()
         {
             while (!client.Connected)
             {
@@ -50,35 +49,35 @@ namespace ClientDemo
 
         public void HandleCommunication()
         {
-            this.sReader = new StreamReader(client.GetStream(), Encoding.ASCII);
-            this.sWriter = new StreamWriter(client.GetStream(), Encoding.ASCII);
+            this.sReader = new StreamReader(client.GetStream());
+            this.sWriter = new StreamWriter(client.GetStream());
 
-            this.isConnected = true;
             String sData = null;
 
             this.sWriter.WriteLine("New player connected! " + DateTime.Now);
             this.sWriter.Flush();
 
-            //Player Athentication
+            // Connection confirmation from server
+            Console.WriteLine(this.sReader.ReadLine());
+
+            // Player Athentication
             this.SendCredentials();
 
-
-
-            //while (_isConnected)
+            // For chat
+            //while (client.Connected)
             //{
-            //    ////Console.Write("&gt; ");
-            //    ////sData = Console.ReadLine();
+            //    Console.Write("Client: ");
+            //    sData = Console.ReadLine();
 
-            //    ////// write data and make sure to flush, or the buffer will continue to 
-            //    ////// grow, and your data might not be sent when you want it, and will
-            //    ////// only be sent once the buffer is filled.
-            //    ////_sWriter.WriteLine(sData);
-            //    _sWriter.WriteLine("connected");
-            //    _sWriter.Flush();
+            //    // write data and make sure to flush, or the buffer will continue to 
+            //    // grow, and your data might not be sent when you want it, and will
+            //    // only be sent once the buffer is filled.
+            //    sWriter.WriteLine(sData);
+            //    sWriter.Flush();
 
-            //    ////// if you want to receive anything
-            //    ////String sDataIncomming = _sReader.ReadLine();
-            //    ////Console.WriteLine(sDataIncomming);
+            //    // if you want to receive anything
+            //    String sDataIncomming = sReader.ReadLine();
+            //    Console.WriteLine(sDataIncomming);
             //}
         }
 
@@ -109,9 +108,29 @@ namespace ClientDemo
 
         }
 
+        public void ReadServerData()
+        {
+            try
+            {
+                string incoming = this.sReader.ReadLine();
+                Console.WriteLine(incoming);
+            }
+            catch (SocketException)
+            {
+                Console.WriteLine("Error reading object!");
+            }
+        }
+
+        public void CloseClient()
+        {
+            sWriter.Close();
+            sReader.Close();
+            client.Close();
+        }
+
         static void Main(string[] args)
         {
-            ClientDemo client = new ClientDemo();
+            Client client = new Client();
         }
     }
 }

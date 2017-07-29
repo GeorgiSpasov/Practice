@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ClientDemo;
+using PhotonClient;
 
 namespace Game
 {
@@ -26,22 +26,17 @@ namespace Game
 
         public static void Main()
         {
-
             //Console size
             Console.BufferHeight = Console.WindowHeight = 40;
             Console.BufferWidth = Console.WindowWidth = 60;
             double speed = 200.0;
 
             //Start client
-            String ip = "127.0.0.1";
-            int port = 5555;
-            ClientDemo.ClientDemo client = new ClientDemo.ClientDemo(ip, port);
+            Client client = new Client();
 
             Player player = new Player();
 
             Console.SetCursorPosition((Console.WindowWidth - player.Skin.Length) / 2, Console.WindowHeight - 1);
-
-            int i = 0;
 
             while (true) //Animation
             {
@@ -52,6 +47,7 @@ namespace Game
                 player.Score++;
 
                 client.SendData(player.PlayerPosition.ToString());
+                client.ReadServerData();
 
                 Thread.Sleep((int)(600 - speed)); //Refresh rate
             }
