@@ -10,13 +10,15 @@ using System.Threading.Tasks;
 
 namespace TcpServer
 {
-
     public class PhotonServer
     {
         private TcpListener server;
         private IPAddress ip; // Store it in a configuration file
         private int port;
         private bool isRunning;
+
+        private Dictionary<string, TcpClient> clients = new Dictionary<string, TcpClient>();
+
 
         public PhotonServer(string ip = "127.0.0.1", int port = 5555)
         {
@@ -63,16 +65,18 @@ namespace TcpServer
             Console.WriteLine(data);
 
             // Connection confirmation
-            sWriter.WriteLine("Your client is connected to Photon server!"); //->add reader to client
+            sWriter.WriteLine("Your client is connected to Photon server!");
             sWriter.Flush();
 
 
             // Player authentication
-            string playerName = PlayerAuthentication(sReader); // Could throw exception!!!
+            string playerName = PlayerAuthentication(client); // Could throw exception!!!
+
+            Console.WriteLine(string.Join("\n", this.clients));
+            Console.ReadLine();
+
 
             int i = 0;
-
-
             while (clientConnected)
             {
                 try
@@ -90,10 +94,10 @@ namespace TcpServer
                         clientConnected = false;
                     }
 
-                    // to write something back.
-                    sWriter.WriteLine("server test data: " + ((i++) % 10)); //->add reader to client
+                    // to write something back
+                    sWriter.WriteLine("server test data: " + ((i++) % 10));
                     sWriter.Flush();
-                    Thread.Sleep(200); //Match game speed!!!!!=================
+                    Thread.Sleep(200); //Match game speed!!!!!=============
                 }
                 catch (Exception)
                 {
@@ -106,12 +110,15 @@ namespace TcpServer
             }
         }
 
-        public string PlayerAuthentication(StreamReader sReader)
+        public string PlayerAuthentication(TcpClient client)
         {
+            StreamReader sReader = new StreamReader(client.GetStream());
             string playerName = sReader.ReadLine();
             Console.WriteLine(playerName);
             string password = sReader.ReadLine();
             Console.WriteLine(password);
+
+            this.clients.Add(playerName, client); // Exchange user data / choose player 2 =====
 
             return playerName;
         }

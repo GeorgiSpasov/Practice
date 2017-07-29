@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhotonClient
+namespace PhotonSpaceMiner
 {
     public class Client
     {
@@ -24,7 +24,7 @@ namespace PhotonClient
             this.port = port;
             this.client = new TcpClient();
             this.ConnectClient();
-            this.HandleCommunication();
+            this.SendCredentials();
         }
 
         public void ConnectClient()
@@ -36,6 +36,14 @@ namespace PhotonClient
                     Console.WriteLine("Attempting connection...");
                     client.Connect(this.ip, port);
                     Console.WriteLine("PhotonClient initiated!");
+                    this.sReader = new StreamReader(client.GetStream());
+                    this.sWriter = new StreamWriter(client.GetStream());
+
+                    this.sWriter.WriteLine("New player connected! " + DateTime.Now);
+                    this.sWriter.Flush();
+
+                    // Connection confirmation from server
+                    Console.WriteLine(this.sReader.ReadLine());
                     break;
                 }
                 catch (Exception)
@@ -45,40 +53,6 @@ namespace PhotonClient
 
                 Thread.Sleep(5000);
             }
-        }
-
-        public void HandleCommunication()
-        {
-            this.sReader = new StreamReader(client.GetStream());
-            this.sWriter = new StreamWriter(client.GetStream());
-
-            String sData = null;
-
-            this.sWriter.WriteLine("New player connected! " + DateTime.Now);
-            this.sWriter.Flush();
-
-            // Connection confirmation from server
-            Console.WriteLine(this.sReader.ReadLine());
-
-            // Player Athentication
-            this.SendCredentials();
-
-            // For chat
-            //while (client.Connected)
-            //{
-            //    Console.Write("Client: ");
-            //    sData = Console.ReadLine();
-
-            //    // write data and make sure to flush, or the buffer will continue to 
-            //    // grow, and your data might not be sent when you want it, and will
-            //    // only be sent once the buffer is filled.
-            //    sWriter.WriteLine(sData);
-            //    sWriter.Flush();
-
-            //    // if you want to receive anything
-            //    String sDataIncomming = sReader.ReadLine();
-            //    Console.WriteLine(sDataIncomming);
-            //}
         }
 
         public void SendCredentials()
@@ -105,7 +79,6 @@ namespace PhotonClient
             {
                 Console.WriteLine("Error writing object!");
             }
-
         }
 
         public void ReadServerData()
@@ -115,9 +88,28 @@ namespace PhotonClient
                 string incoming = this.sReader.ReadLine();
                 Console.WriteLine(incoming);
             }
-            catch (SocketException)
+            catch (IOException)
             {
                 Console.WriteLine("Error reading object!");
+            }
+        }
+
+        public void Chat()
+        {
+            while (client.Connected)
+            {
+                Console.Write("Client: ");
+                string sData = Console.ReadLine();
+
+                // write data and make sure to flush, or the buffer will continue to 
+                // grow, and your data might not be sent when you want it, and will
+                // only be sent once the buffer is filled.
+                sWriter.WriteLine(sData);
+                sWriter.Flush();
+
+                // if you want to receive anything
+                String sDataIncomming = sReader.ReadLine();
+                Console.WriteLine(sDataIncomming);
             }
         }
 
@@ -126,11 +118,6 @@ namespace PhotonClient
             sWriter.Close();
             sReader.Close();
             client.Close();
-        }
-
-        static void Main(string[] args)
-        {
-            Client client = new Client();
         }
     }
 }

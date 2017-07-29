@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{6156E54B-4087-4304-ADB0-76252D8ACEE4}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Game</RootNamespace>
-    <AssemblyName>Game</AssemblyName>
+    <RootNamespace>PhotonSpaceMiner</RootNamespace>
+    <AssemblyName>PhotonSpaceMiner</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client.cs" />
     <Compile Include="Example.cs" />
     <Compile Include="GameStart.cs" />
     <Compile Include="Player.cs" />
@@ -51,12 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PhotonClient\PhotonClient.csproj">
-      <Project>{7a7da579-af5e-4524-acc3-3e8b0e348c7d}</Project>
-      <Name>PhotonClient</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

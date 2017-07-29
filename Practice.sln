@@ -53,8 +53,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotonSpaceMiner", "PhotonS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotonServer", "PhotonServer\PhotonServer.csproj", "{26A7A950-C29F-4862-8099-D995D9AF73B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotonClient", "PhotonClient\PhotonClient.csproj", "{7A7DA579-AF5E-4524-ACC3-3E8B0E348C7D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -145,10 +143,6 @@ Global
 		{26A7A950-C29F-4862-8099-D995D9AF73B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26A7A950-C29F-4862-8099-D995D9AF73B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26A7A950-C29F-4862-8099-D995D9AF73B7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A7DA579-AF5E-4524-ACC3-3E8B0E348C7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A7DA579-AF5E-4524-ACC3-3E8B0E348C7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A7DA579-AF5E-4524-ACC3-3E8B0E348C7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A7DA579-AF5E-4524-ACC3-3E8B0E348C7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
