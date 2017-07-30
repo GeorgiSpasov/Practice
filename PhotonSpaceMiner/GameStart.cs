@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using PhotonSpaceMiner;
+using PhotonSpaceMiner.Remote;
 
 namespace PhotonSpaceMiner
 {
@@ -32,7 +32,7 @@ namespace PhotonSpaceMiner
             double speed = 200.0;
 
             //Start client
-            Client client = new Client();
+            PhotonClient client = new PhotonClient();
 
             Player player = new Player();
 

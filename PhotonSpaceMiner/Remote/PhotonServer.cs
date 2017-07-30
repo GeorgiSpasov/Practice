@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace TcpServer
+namespace PhotonSpaceMiner.Remote
 {
     public class PhotonServer
     {
@@ -124,9 +124,9 @@ namespace TcpServer
         }
 
 
-        static void Main(string[] args)
-        {
-            PhotonServer server = new PhotonServer();
-        }
+        //static void Main(string[] args)
+        //{
+        //    PhotonServer server = new PhotonServer();
+        //}
     }
 }

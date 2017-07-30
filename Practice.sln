@@ -51,8 +51,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR0116.BirthdayChocolate", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotonSpaceMiner", "PhotonSpaceMiner\PhotonSpaceMiner.csproj", "{6156E54B-4087-4304-ADB0-76252D8ACEE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotonServer", "PhotonServer\PhotonServer.csproj", "{26A7A950-C29F-4862-8099-D995D9AF73B7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,10 +137,6 @@ Global
 		{6156E54B-4087-4304-ADB0-76252D8ACEE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6156E54B-4087-4304-ADB0-76252D8ACEE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6156E54B-4087-4304-ADB0-76252D8ACEE4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{26A7A950-C29F-4862-8099-D995D9AF73B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{26A7A950-C29F-4862-8099-D995D9AF73B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{26A7A950-C29F-4862-8099-D995D9AF73B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{26A7A950-C29F-4862-8099-D995D9AF73B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

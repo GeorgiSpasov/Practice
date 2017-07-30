@@ -8,9 +8,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhotonSpaceMiner
+namespace PhotonSpaceMiner.Remote
 {
-    public class Client
+    public class PhotonClient
     {
         private TcpClient client;
         private IPAddress ip; // Store it in a configuration file
@@ -18,7 +18,7 @@ namespace PhotonSpaceMiner
         private StreamReader sReader;
         private StreamWriter sWriter;
 
-        public Client(string ip = "127.0.0.1", int port = 5555)
+        public PhotonClient(string ip = "127.0.0.1", int port = 5555)
         {
             this.ip = IPAddress.Parse(ip);
             this.port = port;
@@ -49,10 +49,19 @@ namespace PhotonSpaceMiner
                 catch (Exception)
                 {
                     Console.WriteLine("Connection Error");
+
+                    Console.WriteLine("Starting new Photon server...");
+                    Thread serverThread = new Thread(StartServer);
+                    serverThread.Start();
                 }
 
-                Thread.Sleep(5000);
+                Thread.Sleep(1000);
             }
+        }
+
+        public void StartServer()
+        {
+            PhotonServer server = new PhotonServer();
         }
 
         public void SendCredentials()
