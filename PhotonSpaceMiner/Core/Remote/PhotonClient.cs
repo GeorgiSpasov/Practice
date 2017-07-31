@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PhotonSpaceMiner.Core.Contracts;
+using PhotonSpaceMiner.Core.Remote;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,6 +26,10 @@ namespace PhotonSpaceMiner.Remote
             this.port = port;
             this.client = new TcpClient();
             this.ConnectClient();
+
+            Thread.Sleep(2000);
+            Console.Clear();
+
             this.SendCredentials();
         }
 
@@ -35,12 +41,16 @@ namespace PhotonSpaceMiner.Remote
                 {
                     Console.WriteLine("Attempting connection...");
                     client.Connect(this.ip, port);
-                    Console.WriteLine("PhotonClient initiated!");
                     this.sReader = new StreamReader(client.GetStream());
                     this.sWriter = new StreamWriter(client.GetStream());
+                    Console.WriteLine("PhotonClient connected!");
 
                     this.sWriter.WriteLine("New player connected! " + DateTime.Now);
                     this.sWriter.Flush();
+
+
+
+
 
                     // Connection confirmation from server
                     Console.WriteLine(this.sReader.ReadLine());
@@ -55,18 +65,18 @@ namespace PhotonSpaceMiner.Remote
                     serverThread.Start();
                 }
 
-                Thread.Sleep(1000);
+                Thread.Sleep(5000);
             }
         }
 
         public void StartServer()
         {
-            PhotonServer server = new PhotonServer();
+            PhotonServer.Instance.Start();
         }
 
         public void SendCredentials()
         {
-            Console.Write("Enter user name: ");
+            Console.Write("Enter user name: "); // receive requests from server while "end authentication"
             string userName = Console.ReadLine();
             sWriter.WriteLine(userName);
             sWriter.Flush();

@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PhotonSpaceMiner
+namespace PhotonSpaceMiner.Core.Contracts
 {
-    class Screen
+    public interface IUser
     {
+        string UserName { get; }
 
+        string Password { get; }
     }
 }

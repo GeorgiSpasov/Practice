@@ -8,29 +8,59 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhotonSpaceMiner.Remote
+using PhotonSpaceMiner.Core.Contracts;
+using PhotonSpaceMiner.Core.Providers;
+
+namespace PhotonSpaceMiner.Core.Remote
 {
-    public class PhotonServer
+    public class PhotonServer : IServer
     {
-        private TcpListener server;
-        private IPAddress ip; // Store it in a configuration file
-        private int port;
+        private static readonly IServer instance = new PhotonServer();
+
+        private readonly TcpListener server;
+        private readonly IPAddress ip;
+        private readonly int port;
         private bool isRunning;
 
-        private Dictionary<string, TcpClient> clients = new Dictionary<string, TcpClient>();
+        private readonly Dictionary<string, TcpClient> clients;
+        private readonly Dictionary<Tuple<string, string>, Player> users;
+        #region Tuple usage
+        //Dictionary<Tuple<string, string>, int> dic = new Dictionary<Tuple<string, string>, int>();
+        //dic.Add(new Tuple<string, string>("playerNmae", "pass"), 22);
+        //dic.Add(new Tuple<string, string>("playerNmae2", "pass1"), 11);
+        //string n = "playerNmae";
+        //string p = "pass";
+        //bool c = dic.ContainsKey(new Tuple<string, string>(n, p));
+        //int x = dic[new Tuple<string, string>(n, p)];
+        //Console.WriteLine(x + " " + c);
+        #endregion
 
-
-        public PhotonServer(string ip = "127.0.0.1", int port = 5555)
+        private PhotonServer()
         {
-            this.ip = IPAddress.Parse(ip);
-            this.port = port;
+            this.ip = IPAddress.Parse(ReadSettings("ip"));
+            this.port = int.Parse(ReadSettings("port"));
             this.server = new TcpListener(this.ip, port);
+            this.clients = new Dictionary<string, TcpClient>();
+            this.users = GameDB.Instance.Users;
+        }
+
+        public static IServer Instance
+        {
+            get
+            {
+                return instance;
+            }
+        }
+
+        public void Start()
+        {
             this.server.Start();
-            Console.WriteLine("PhotonServer initiated!");
             this.isRunning = true;
+            Console.WriteLine("PhotonServer initiated!");
 
             this.LoopClients();
         }
+
 
         public void LoopClients()
         {
@@ -54,11 +84,10 @@ namespace PhotonSpaceMiner.Remote
 
             StreamWriter sWriter = new StreamWriter(client.GetStream());
             StreamReader sReader = new StreamReader(client.GetStream());
-            // you could use the NetworkStream to read and write, 
-            // but there is no forcing flush, even when requested
+            // you could use the NetworkStream to read and write, but there is no forcing flush, even when requested
 
             bool clientConnected = true;
-            string data = null;
+            string data = "";
 
             // Client status read
             data = sReader.ReadLine();
@@ -67,7 +96,6 @@ namespace PhotonSpaceMiner.Remote
             // Connection confirmation
             sWriter.WriteLine("Your client is connected to Photon server!");
             sWriter.Flush();
-
 
             // Player authentication
             string playerName = PlayerAuthentication(client); // Could throw exception!!!
@@ -123,10 +151,22 @@ namespace PhotonSpaceMiner.Remote
             return playerName;
         }
 
-
-        //static void Main(string[] args)
-        //{
-        //    PhotonServer server = new PhotonServer();
-        //}
+        public static string ReadSettings(string property)
+        {
+            string setting = "";
+            using (StreamReader reader = new StreamReader("../../Core/Settings.txt"))
+            {
+                string line;
+                while (true)
+                {
+                    line = reader.ReadLine();
+                    if (line.Contains(property.ToLower()))
+                    {
+                        setting = line.Split(new string[] { ":>" }, StringSplitOptions.RemoveEmptyEntries)[1];
+                        return setting;
+                    }
+                }
+            }
+        }
     }
 }

@@ -1,0 +1,16 @@
+﻿PHOTON SPACE MINER
+
+
+
+Collect photons
+Trade with others
+Upgrade & Conquer
+
+
+Choose game mode:
+1. Single Player 
+2. Multiplayer   
+3. Log in        
+4. Create Account
+
+Enter your choice: 
