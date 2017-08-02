@@ -23,6 +23,7 @@ namespace PhotonSpaceMiner
         Spread
     }
 
+    [Serializable]
     public class Player
     {
         private string skin;

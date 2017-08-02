@@ -71,7 +71,8 @@ namespace PhotonSpaceMiner.Core
 
                 if (choice == 2 || choice == 3)
                 {
-                    client.SendData(currentPlayer.PlayerPosition.ToString());
+                    //client.SendData(currentPlayer.PlayerPosition.ToString()); //---------------------------------02.08.2017
+                    client.SendObj(currentPlayer);
                     client.ReadServerData();
                 }
 

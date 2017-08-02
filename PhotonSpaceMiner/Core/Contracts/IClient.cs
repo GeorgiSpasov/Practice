@@ -6,6 +6,8 @@
 
         void SendData(string output);
 
+        void SendObj(Player output);
+
         void ReadServerData();
     }
 }

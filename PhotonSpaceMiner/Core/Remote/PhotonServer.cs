@@ -115,7 +115,10 @@ namespace PhotonSpaceMiner.Core.Remote
             {
                 try
                 {
-                    data = sReader.ReadLine();
+                    data = sReader.ReadLine();//------------------
+                    //Player opponent = sReader.CreateObjRef(typeof(Player));
+
+                    //____________________________________________
                     Console.WriteLine(playerName + ": " + data);
 
                     if (data == "terminate")

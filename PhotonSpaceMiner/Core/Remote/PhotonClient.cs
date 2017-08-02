@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using PhotonSpaceMiner.Core.Remote;
 using PhotonSpaceMiner.Utils;
 using PhotonSpaceMiner.Core.Contracts;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace PhotonSpaceMiner.Remote
 {
@@ -80,11 +81,27 @@ namespace PhotonSpaceMiner.Remote
                 }
             }
         }
-        
+
         public void SendData(string output)
         {
             try
             {
+                this.sWriter.WriteLine(output);
+                this.sWriter.Flush();
+            }
+            catch (SocketException)
+            {
+                Console.WriteLine("Error writing object!");
+            }
+        }
+
+        public void SendObj(Player output)
+        {
+            try
+            {
+                //+++++++++++++++++++++++++++++++++
+                // TODO: Send player
+                //_______________________________
                 this.sWriter.WriteLine(output);
                 this.sWriter.Flush();
             }
