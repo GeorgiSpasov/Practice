@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 using PhotonSpaceMiner.Core.Contracts;
 using PhotonSpaceMiner.Core.Providers;
+using PhotonSpaceMiner.Utils;
 
 namespace PhotonSpaceMiner.Core.Remote
 {
@@ -23,7 +24,7 @@ namespace PhotonSpaceMiner.Core.Remote
         private bool isRunning;
 
         private readonly Dictionary<string, TcpClient> clients;
-        private readonly Dictionary<Tuple<string, string>, Player> users;
+        private readonly Dictionary<Tuple<string, string>, Player> users; //Load game
         #region Tuple usage
         //Dictionary<Tuple<string, string>, int> dic = new Dictionary<Tuple<string, string>, int>();
         //dic.Add(new Tuple<string, string>("playerNmae", "pass"), 22);
@@ -37,8 +38,8 @@ namespace PhotonSpaceMiner.Core.Remote
 
         private PhotonServer()
         {
-            this.ip = IPAddress.Parse(ReadSettings("ip"));
-            this.port = int.Parse(ReadSettings("port"));
+            this.ip = IPAddress.Parse(PhotonIO.ReadSettings("ip"));
+            this.port = int.Parse(PhotonIO.ReadSettings("port"));
             this.server = new TcpListener(this.ip, port);
             this.clients = new Dictionary<string, TcpClient>();
             this.users = GameDB.Instance.Users;
@@ -94,15 +95,20 @@ namespace PhotonSpaceMiner.Core.Remote
             Console.WriteLine(data);
 
             // Connection confirmation
-            sWriter.WriteLine("Your client is connected to Photon server!");
+            sWriter.WriteLine("Your client is connected to PhotonServer!");
             sWriter.Flush();
 
+            Thread.Sleep(2000);
+            Console.Clear();
+
             // Player authentication
-            string playerName = PlayerAuthentication(client); // Could throw exception!!!
+            string playerName = PlayerAuthentication(client);
 
-            Console.WriteLine(string.Join("\n", this.clients));
-            Console.ReadLine();
+            this.ChooseOpponent(client);
 
+            // Initial  communication's end
+            sWriter.WriteLine("over");
+            sWriter.Flush();
 
             int i = 0;
             while (clientConnected)
@@ -141,32 +147,31 @@ namespace PhotonSpaceMiner.Core.Remote
         public string PlayerAuthentication(TcpClient client)
         {
             StreamReader sReader = new StreamReader(client.GetStream());
+            StreamWriter sWriter = new StreamWriter(client.GetStream());
+
+            sWriter.WriteLine("Enter user name: ");
+            sWriter.Flush();
             string playerName = sReader.ReadLine();
-            Console.WriteLine(playerName);
+            sWriter.WriteLine("Enter password: ");
+            sWriter.Flush();
             string password = sReader.ReadLine();
-            Console.WriteLine(password);
 
             this.clients.Add(playerName, client); // Exchange user data / choose player 2 =====
 
             return playerName;
         }
 
-        public static string ReadSettings(string property)
+        public void ChooseOpponent(TcpClient client)
         {
-            string setting = "";
-            using (StreamReader reader = new StreamReader("../../Core/Settings.txt"))
-            {
-                string line;
-                while (true)
-                {
-                    line = reader.ReadLine();
-                    if (line.Contains(property.ToLower()))
-                    {
-                        setting = line.Split(new string[] { ":>" }, StringSplitOptions.RemoveEmptyEntries)[1];
-                        return setting;
-                    }
-                }
-            }
+            StreamReader sReader = new StreamReader(client.GetStream());
+            StreamWriter sWriter = new StreamWriter(client.GetStream());
+            sWriter.WriteLine($"Choose your opponent: {string.Join(" | ", this.clients.Keys)}");
+            sWriter.Flush();
+            string opponentName = sReader.ReadLine();
+
+            sWriter.WriteLine($"You have chosen {this.clients[opponentName]}!");
+            sWriter.Flush();
+
         }
     }
 }

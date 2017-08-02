@@ -1,6 +1,4 @@
-﻿using PhotonSpaceMiner.Core.Contracts;
-using PhotonSpaceMiner.Core.Remote;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,27 +8,35 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using PhotonSpaceMiner.Core.Remote;
+using PhotonSpaceMiner.Utils;
+using PhotonSpaceMiner.Core.Contracts;
+
 namespace PhotonSpaceMiner.Remote
 {
-    public class PhotonClient
+    public class PhotonClient : IClient
     {
+        private static readonly IClient instance = new PhotonClient();
+
         private TcpClient client;
-        private IPAddress ip; // Store it in a configuration file
+        private IPAddress ip;
         private int port;
         private StreamReader sReader;
         private StreamWriter sWriter;
 
-        public PhotonClient(string ip = "127.0.0.1", int port = 5555)
+        public PhotonClient()
         {
-            this.ip = IPAddress.Parse(ip);
-            this.port = port;
+            this.ip = IPAddress.Parse(PhotonIO.ReadSettings("ip"));
+            this.port = int.Parse(PhotonIO.ReadSettings("port"));
             this.client = new TcpClient();
-            this.ConnectClient();
+        }
 
-            Thread.Sleep(2000);
-            Console.Clear();
-
-            this.SendCredentials();
+        public static IClient Instance
+        {
+            get
+            {
+                return instance;
+            }
         }
 
         public void ConnectClient()
@@ -43,50 +49,38 @@ namespace PhotonSpaceMiner.Remote
                     client.Connect(this.ip, port);
                     this.sReader = new StreamReader(client.GetStream());
                     this.sWriter = new StreamWriter(client.GetStream());
-                    Console.WriteLine("PhotonClient connected!");
 
                     this.sWriter.WriteLine("New player connected! " + DateTime.Now);
                     this.sWriter.Flush();
-
-
-
-
-
                     // Connection confirmation from server
                     Console.WriteLine(this.sReader.ReadLine());
+
+                    // Initial communication with server
+                    string incoming = "";
+                    while (true)
+                    {
+                        incoming = sReader.ReadLine();
+                        Console.WriteLine(incoming);
+                        if (incoming == "over")
+                        {
+                            break;
+                        }
+                        sWriter.WriteLine(Console.ReadLine());
+                        sWriter.Flush();
+                    }
                     break;
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Connection Error");
+                    Console.WriteLine("Connection Error!");
 
                     Console.WriteLine("Starting new Photon server...");
-                    Thread serverThread = new Thread(StartServer);
+                    Thread serverThread = new Thread(PhotonServer.Instance.Start);
                     serverThread.Start();
                 }
-
-                Thread.Sleep(5000);
             }
         }
-
-        public void StartServer()
-        {
-            PhotonServer.Instance.Start();
-        }
-
-        public void SendCredentials()
-        {
-            Console.Write("Enter user name: "); // receive requests from server while "end authentication"
-            string userName = Console.ReadLine();
-            sWriter.WriteLine(userName);
-            sWriter.Flush();
-
-            Console.Write("Enter password: ");
-            string password = Console.ReadLine();
-            sWriter.WriteLine(password);
-            sWriter.Flush();
-        }
-
+        
         public void SendData(string output)
         {
             try
@@ -120,13 +114,9 @@ namespace PhotonSpaceMiner.Remote
                 Console.Write("Client: ");
                 string sData = Console.ReadLine();
 
-                // write data and make sure to flush, or the buffer will continue to 
-                // grow, and your data might not be sent when you want it, and will
-                // only be sent once the buffer is filled.
                 sWriter.WriteLine(sData);
                 sWriter.Flush();
 
-                // if you want to receive anything
                 String sDataIncomming = sReader.ReadLine();
                 Console.WriteLine(sDataIncomming);
             }

@@ -36,7 +36,7 @@ namespace PhotonSpaceMiner.Core
             Console.BufferWidth = Console.WindowWidth = 60;
             double speed = 200.0;
 
-            PhotonClient client = null;
+            IClient client = null;
             int choice = Menu.Start();
             switch (choice)
             {
@@ -45,7 +45,8 @@ namespace PhotonSpaceMiner.Core
                 case 2:
                 case 3:
                     //Start client
-                    client = new PhotonClient();
+                    client = PhotonClient.Instance;
+                    client.ConnectClient();
                     break;
                 case 4:
                     Console.WriteLine("Not supported yet!");//===============
@@ -62,6 +63,7 @@ namespace PhotonSpaceMiner.Core
             while (true) //Animation
             {
                 Console.Clear();
+                Console.CursorVisible = false;
 
                 Print(currentPlayer);
                 currentPlayer.Move();
@@ -79,11 +81,9 @@ namespace PhotonSpaceMiner.Core
 
         public static void Print(Player player)
         {
-            Console.CursorVisible = false;
-
             Console.ForegroundColor = player.Color;
             Console.SetCursorPosition(player.PlayerPosition.X, player.PlayerPosition.Y);
-            Console.WriteLine(player);
+            Console.Write(player);
 
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(0, 0);
