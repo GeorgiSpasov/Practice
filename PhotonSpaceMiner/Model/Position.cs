@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PhotonSpaceMiner
+namespace PhotonSpaceMiner.Model
 {
+    [Serializable]
     public struct Position
     {
         public Position(int x, int y)

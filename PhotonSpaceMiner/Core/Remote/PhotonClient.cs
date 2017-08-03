@@ -12,6 +12,7 @@ using PhotonSpaceMiner.Core.Remote;
 using PhotonSpaceMiner.Utils;
 using PhotonSpaceMiner.Core.Contracts;
 using System.Runtime.Serialization.Formatters.Binary;
+using PhotonSpaceMiner.Model;
 
 namespace PhotonSpaceMiner.Remote
 {
@@ -19,7 +20,7 @@ namespace PhotonSpaceMiner.Remote
     {
         private static readonly IClient instance = new PhotonClient();
 
-        private TcpClient client;
+        private TcpClient client; //readonly for singleton???
         private IPAddress ip;
         private int port;
         private StreamReader sReader;
@@ -37,6 +38,18 @@ namespace PhotonSpaceMiner.Remote
             get
             {
                 return instance;
+            }
+        }
+
+        public TcpClient Client
+        {
+            get
+            {
+                return this.client;
+            }
+            set
+            {
+                this.client = value;
             }
         }
 
@@ -95,33 +108,19 @@ namespace PhotonSpaceMiner.Remote
             }
         }
 
-        public void SendObj(Player output)
+        public string ReadServerData()
         {
+            string serverData = "";
             try
             {
-                //+++++++++++++++++++++++++++++++++
-                // TODO: Send player
-                //_______________________________
-                this.sWriter.WriteLine(output);
-                this.sWriter.Flush();
-            }
-            catch (SocketException)
-            {
-                Console.WriteLine("Error writing object!");
-            }
-        }
-
-        public void ReadServerData()
-        {
-            try
-            {
-                string incoming = this.sReader.ReadLine();
-                Console.WriteLine(incoming);
+                serverData = this.sReader.ReadLine();
             }
             catch (IOException)
             {
                 Console.WriteLine("Error reading object!");
             }
+
+            return serverData;
         }
 
         public void Chat()

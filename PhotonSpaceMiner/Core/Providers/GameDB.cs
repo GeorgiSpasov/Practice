@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using PhotonSpaceMiner.Core.Contracts;
+using PhotonSpaceMiner.Model;
 
 namespace PhotonSpaceMiner.Core.Providers
 {

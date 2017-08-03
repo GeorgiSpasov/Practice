@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using PhotonSpaceMiner.Core.Contracts;
 using PhotonSpaceMiner.Core.Providers;
 using PhotonSpaceMiner.Utils;
+using PhotonSpaceMiner.Model;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace PhotonSpaceMiner.Core.Remote
 {
@@ -23,6 +25,8 @@ namespace PhotonSpaceMiner.Core.Remote
         private readonly int port;
         private bool isRunning;
 
+        // Game logic ===========================================================
+        // client name(clients) == player name(players)
         private readonly Dictionary<string, TcpClient> clients;
         private readonly Dictionary<Tuple<string, string>, Player> users; //Load game
         #region Tuple usage
@@ -62,7 +66,6 @@ namespace PhotonSpaceMiner.Core.Remote
             this.LoopClients();
         }
 
-
         public void LoopClients()
         {
             while (isRunning) // Add server close method
@@ -70,7 +73,7 @@ namespace PhotonSpaceMiner.Core.Remote
                 Console.WriteLine("Waiting for connection...");
 
                 // wait for client connection
-                TcpClient newClient = server.AcceptTcpClient();
+                TcpClient newClient = server.AcceptTcpClient(); //Create PhotonClient ????????????????????
 
                 // client found & create a thread to handle communication
                 Thread t = new Thread(new ParameterizedThreadStart(HandleClient));
@@ -97,8 +100,6 @@ namespace PhotonSpaceMiner.Core.Remote
             // Connection confirmation
             sWriter.WriteLine("Your client is connected to PhotonServer!");
             sWriter.Flush();
-
-            Thread.Sleep(2000);
             Console.Clear();
 
             // Player authentication
@@ -110,12 +111,22 @@ namespace PhotonSpaceMiner.Core.Remote
             sWriter.WriteLine("over");
             sWriter.Flush();
 
-            int i = 0;
+            Player onlinePlayer = new Player();
+            NetworkStream ns = client.GetStream();
             while (clientConnected)
             {
                 try
                 {
-                    data = sReader.ReadLine();//------------------
+                    // Online game start !!!!!!!!!!!!!
+                    onlinePlayer.Score++; //test
+
+                    // Game start
+                    // TODO: add second player & send array of objects
+                    SendSerializedObject(ns, onlinePlayer);
+
+                    data = sReader.ReadLine();
+                    onlinePlayer.MoveOnLine(int.Parse(data));
+
                     //Player opponent = sReader.CreateObjRef(typeof(Player));
 
                     //____________________________________________
@@ -123,7 +134,7 @@ namespace PhotonSpaceMiner.Core.Remote
 
                     if (data == "terminate")
                     {
-                        Console.WriteLine("User terminated connectioin!");
+                        Console.WriteLine("User terminated connection!");
 
                         sWriter.Close();
                         sReader.Close();
@@ -132,11 +143,11 @@ namespace PhotonSpaceMiner.Core.Remote
                     }
 
                     // to write something back
-                    sWriter.WriteLine("server test data: " + ((i++) % 10));
-                    sWriter.Flush();
+                    //sWriter.WriteLine("server test data: " + ((i++) % 10));
+                    //sWriter.Flush();
                     Thread.Sleep(200); //Match game speed!!!!!=============
                 }
-                catch (Exception)
+                catch (IOException)
                 {
                     Console.WriteLine("Connection with player lost!");
                     sWriter.Close();
@@ -171,10 +182,19 @@ namespace PhotonSpaceMiner.Core.Remote
             sWriter.WriteLine($"Choose your opponent: {string.Join(" | ", this.clients.Keys)}");
             sWriter.Flush();
             string opponentName = sReader.ReadLine();
+        }
 
-            sWriter.WriteLine($"You have chosen {this.clients[opponentName]}!");
-            sWriter.Flush();
-
+        public void SendSerializedObject(NetworkStream ns, object obj)
+        {
+            byte[] serializedObject;
+            var formatter = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                formatter.Serialize(ms, obj);
+                serializedObject = ms.ToArray();
+            }
+            ns.Write(serializedObject, 0, serializedObject.Length);
+            ns.Flush();
         }
     }
 }

@@ -1,13 +1,16 @@
-﻿namespace PhotonSpaceMiner.Core.Contracts
+﻿using PhotonSpaceMiner.Model;
+using System.Net.Sockets;
+
+namespace PhotonSpaceMiner.Core.Contracts
 {
     public interface IClient
     {
+        TcpClient Client { get; }
+
         void ConnectClient();
 
         void SendData(string output);
 
-        void SendObj(Player output);
-
-        void ReadServerData();
+        string ReadServerData();
     }
 }

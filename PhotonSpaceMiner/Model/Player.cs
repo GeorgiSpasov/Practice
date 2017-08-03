@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PhotonSpaceMiner
+using PhotonSpaceMiner.Model.Contracts;
+
+namespace PhotonSpaceMiner.Model
 {
     public enum PlayerState
     {
@@ -24,7 +26,7 @@ namespace PhotonSpaceMiner
     }
 
     [Serializable]
-    public class Player
+    public class Player : IPrintable
     {
         private string skin;
         private PlayerState state;
@@ -36,6 +38,8 @@ namespace PhotonSpaceMiner
         private int health;
         private int score;
         private int booletsLeft;
+
+        public int pressedKey; // save key to send to server---------------------delete
 
         //private bool shielded; //Collision with states
 
@@ -55,9 +59,8 @@ namespace PhotonSpaceMiner
             "|" //spread weapons |<^>| shoots \ /
         };
 
-        public Player() : this(PlayerState.Default, WeaponChoice.Torpedo, ConsoleColor.Cyan, new Position((Console.WindowWidth - 3 /*skin.Length*/) / 2, Console.WindowHeight - 1), 3, 100, 0, 1000)
+        public Player() : this(PlayerState.Default, WeaponChoice.Torpedo, ConsoleColor.Cyan, new Position((Console.WindowWidth - 4 /*skin.Length*/) / 2, Console.WindowHeight - 1), 3, 100, 0, 1000)
         {
-
         }
 
         public Player(PlayerState state, WeaponChoice weapon, ConsoleColor color, Position playerPosition, int lives, int health, int score, int booletsLeft)
@@ -72,7 +75,6 @@ namespace PhotonSpaceMiner
             this.Score = score;
             this.booletsLeft = booletsLeft;
         }
-
 
         public string Skin
         {
@@ -192,7 +194,6 @@ namespace PhotonSpaceMiner
             }
         }
 
-
         public void Move()
         {
             while (Console.KeyAvailable)
@@ -213,8 +214,7 @@ namespace PhotonSpaceMiner
                         this.playerPosition.Y += 1;
                     }
                 }
-
-                if (pressedKey.Key == ConsoleKey.LeftArrow)
+                else if (pressedKey.Key == ConsoleKey.LeftArrow)
                 {
                     if (this.PlayerPosition.X - 1 >= 0)
                     {
@@ -228,6 +228,47 @@ namespace PhotonSpaceMiner
                         this.playerPosition.X += 1;
                     }
                 }
+            }
+        }
+
+        public void MoveOnLine(int pressedKey)
+        {
+            if ((ConsoleKey)pressedKey == ConsoleKey.UpArrow)
+            {
+                if (this.PlayerPosition.Y - 1 >= 0)
+                {
+                    this.playerPosition.Y -= 1; //TODO: Fix property access
+                }
+            }
+            else if ((ConsoleKey)pressedKey == ConsoleKey.DownArrow)
+            {
+                if (this.PlayerPosition.Y + 1 < Console.WindowHeight - 1)
+                {
+                    this.playerPosition.Y += 1;
+                }
+            }
+            else if ((ConsoleKey)pressedKey == ConsoleKey.LeftArrow)
+            {
+                if (this.PlayerPosition.X - 1 >= 0)
+                {
+                    this.playerPosition.X -= 1; //TODO: Fix property access
+                }
+            }
+            else if ((ConsoleKey)pressedKey == ConsoleKey.RightArrow)
+            {
+                if (this.PlayerPosition.X + 1 < Console.WindowWidth - 3)
+                {
+                    this.playerPosition.X += 1;
+                }
+            }
+        }
+
+        public void ReadPressedKey() // delete ------
+        {
+            while (Console.KeyAvailable)
+            {
+                ConsoleKeyInfo pressedKey = Console.ReadKey(true);
+                this.pressedKey = (int)pressedKey.Key;
             }
         }
 
