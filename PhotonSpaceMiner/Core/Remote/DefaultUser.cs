@@ -9,7 +9,6 @@ namespace PhotonSpaceMiner.Core.Remote
 {
     public class DefaultUser : User
     {
-
         private Player savedGame;
 
         public DefaultUser(string userName, string password, Player savedGame = null) : base(userName, password)

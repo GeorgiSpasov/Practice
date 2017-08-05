@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using PhotonSpaceMiner.Model.Contracts;
 
@@ -38,8 +34,6 @@ namespace PhotonSpaceMiner.Model
         private int health;
         private int score;
         private int booletsLeft;
-
-        public int pressedKey; // save key to send to server---------------------delete
 
         //private bool shielded; //Collision with states
 
@@ -138,7 +132,6 @@ namespace PhotonSpaceMiner.Model
             }
         }
 
-
         public int Lives
         {
             get
@@ -204,7 +197,7 @@ namespace PhotonSpaceMiner.Model
                 {
                     if (this.PlayerPosition.Y - 1 >= 0)
                     {
-                        this.playerPosition.Y -= 1; //TODO: Fix property access
+                        this.playerPosition.Y -= 1;
                     }
                 }
                 else if (pressedKey.Key == ConsoleKey.DownArrow)
@@ -218,12 +211,12 @@ namespace PhotonSpaceMiner.Model
                 {
                     if (this.PlayerPosition.X - 1 >= 0)
                     {
-                        this.playerPosition.X -= 1; //TODO: Fix property access
+                        this.playerPosition.X -= 1;
                     }
                 }
                 else if (pressedKey.Key == ConsoleKey.RightArrow)
                 {
-                    if (this.PlayerPosition.X + 1 < Console.WindowWidth - 3)
+                    if (this.PlayerPosition.X + 1 < Console.WindowWidth - this.ToString().Length)
                     {
                         this.playerPosition.X += 1;
                     }
@@ -237,7 +230,7 @@ namespace PhotonSpaceMiner.Model
             {
                 if (this.PlayerPosition.Y - 1 >= 0)
                 {
-                    this.playerPosition.Y -= 1; //TODO: Fix property access
+                    this.playerPosition.Y -= 1;
                 }
             }
             else if ((ConsoleKey)pressedKey == ConsoleKey.DownArrow)
@@ -251,24 +244,15 @@ namespace PhotonSpaceMiner.Model
             {
                 if (this.PlayerPosition.X - 1 >= 0)
                 {
-                    this.playerPosition.X -= 1; //TODO: Fix property access
+                    this.playerPosition.X -= 1;
                 }
             }
             else if ((ConsoleKey)pressedKey == ConsoleKey.RightArrow)
             {
-                if (this.PlayerPosition.X + 1 < Console.WindowWidth - 3)
+                if (this.PlayerPosition.X + 1 < Console.WindowWidth - this.ToString().Length)
                 {
                     this.playerPosition.X += 1;
                 }
-            }
-        }
-
-        public void ReadPressedKey() // delete ------
-        {
-            while (Console.KeyAvailable)
-            {
-                ConsoleKeyInfo pressedKey = Console.ReadKey(true);
-                this.pressedKey = (int)pressedKey.Key;
             }
         }
 

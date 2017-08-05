@@ -1,32 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
+using System.Net.Sockets;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
-using System.Threading.Tasks;
 
-using PhotonSpaceMiner.Remote;
 using PhotonSpaceMiner.Core.Contracts;
 using PhotonSpaceMiner.Model;
-using PhotonSpaceMiner.View;
 using PhotonSpaceMiner.Model.Contracts;
-using System.Net.Sockets;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using PhotonSpaceMiner.Remote;
+using PhotonSpaceMiner.View;
 
 namespace PhotonSpaceMiner.Core
 {
     public class Engine : IEngine
     {
         private static readonly IEngine instance = new Engine();
-
-        //private readonly Dictionary<Tuple<string, string>, Player> users; //Load game
-        private Player offlinePlayer; // only for offline play
         private int gameSpeed;
-
-        public Engine()
-        {
-        }
 
         public static IEngine Instance
         {
@@ -36,32 +26,38 @@ namespace PhotonSpaceMiner.Core
             }
         }
 
-
+        public int GameSpeed
+        {
+            get
+            {
+                return this.gameSpeed;
+            }
+            set
+            {
+                this.gameSpeed = value;
+            }
+        }
 
         public void Run()
         {
             Screen.SetScreenSize(40, 60);
-            this.gameSpeed = 200;// set on other place -----------
+            Instance.GameSpeed = 200;
 
-
-
-            this.offlinePlayer = new Player(); //choose from game 
-
-            IClient client = null;//------------------------------
             int choice = Menu.Start();
             switch (choice)
             {
                 case 1:
-                    this.Animate();
+                    Player offlinePlayer = new Player();
+                    Instance.PlayOffline(offlinePlayer);
                     break;
                 case 2:
                 case 3:
-                    client = PhotonClient.Instance;
+                    IClient client = new PhotonClient();
                     client.ConnectClient();
-                    this.PlayOnLine(client);
+                    Instance.PlayOnline(client);
                     break;
                 case 4:
-                    Console.WriteLine("Not supported yet!");//===============
+                    Console.WriteLine("Only in paid version!");
                     Thread.Sleep(1000);
                     return;
                 default:
@@ -69,59 +65,40 @@ namespace PhotonSpaceMiner.Core
             }
         }
 
-        public void Animate()
+        public void PlayOffline(Player offlinePlayer)
         {
-            while (true) //Animation ================================================
+            while (true)
             {
                 Console.Clear();
                 Console.CursorVisible = false;
+
                 Screen.PrintObject(offlinePlayer);
                 Screen.PrintStats(offlinePlayer);
-
                 offlinePlayer.Move();
-                offlinePlayer.Score++;
+                offlinePlayer.Score++; // Test ---------------
 
-                //if (choice == 2 || choice == 3)
-                //{
-                //    client.SendData(currentPlayer.PlayerPosition.ToString());
-                //    //client.SendObj(currentPlayer);
-                //    client.ReadServerData();
-                //}
-
-                Thread.Sleep((int)(600 - gameSpeed)); //Refresh rate
+                Thread.Sleep((int)(600 - Instance.GameSpeed));
             }
         }
 
-        public void PlayOnLine(IClient client)
+        public void PlayOnline(IClient client)
         {
-            // Online Animation ================================================
-            while (true) 
+            while (true)
             {
                 Console.Clear();
                 Console.CursorVisible = false;
                 //string serverData = client.ReadServerData();
                 //Console.WriteLine(serverData);
-                
-                // Read GameObjects from server and print
-                NetworkStream ns = client.Client.GetStream();
-                byte[] incommingBytes = new byte[1024];
-                ns.Read(incommingBytes, 0, 1024);
-                IPrintable receivedObject;
-                using (var ms = new MemoryStream(incommingBytes))
-                {
-                    var formatter = new BinaryFormatter();
-                    
-                    ms.Seek(0, SeekOrigin.Begin);
-                    receivedObject = (IPrintable)formatter.Deserialize(ms);
-                }
 
-                Screen.PrintObject(receivedObject);
-                Screen.PrintStats((Player)receivedObject);
+                // Read GameObjects from server and print
+                List<IPrintable> list = ReceiveSerializedList(client);
+                Screen.PrintStats((Player)list[0], (Player)list[1]);
+                list.ForEach(Screen.PrintObject);
 
                 int pressedKey = ReadPressedKey();
                 client.SendData(pressedKey.ToString());
 
-                Thread.Sleep((int)(600 - gameSpeed)); //Refresh rate
+                Thread.Sleep((int)(600 - Instance.GameSpeed));
             }
         }
 
@@ -135,6 +112,54 @@ namespace PhotonSpaceMiner.Core
             }
 
             return result;
+        }
+
+        public IPrintable ReceiveSerializedObejct(TcpClient client)
+        {
+            IPrintable receivedObject;
+            NetworkStream ns = client.GetStream();
+            byte[] incommingBytes = new byte[2048];
+            ns.Read(incommingBytes, 0, 2048);
+            using (var ms = new MemoryStream(incommingBytes))
+            {
+                var formatter = new BinaryFormatter();
+                receivedObject = (IPrintable)formatter.Deserialize(ms);
+            }
+
+            return receivedObject;
+        }
+
+        public List<IPrintable> ReceiveSerializedList(IClient client)
+        {
+            List<IPrintable> list = null;
+            try
+            {
+                NetworkStream ns = client.Client.GetStream();
+                byte[] incommingBytes = new byte[2048];
+                ns.Read(incommingBytes, 0, 2048);
+                using (var ms = new MemoryStream(incommingBytes))
+                {
+                    var formatter = new BinaryFormatter();
+                    list = (List<IPrintable>)formatter.Deserialize(ms);
+                }
+
+            }
+            catch (IOException)
+            {
+                Console.WriteLine("Connection with server lost!");
+                Console.WriteLine("Continue offline? (y/n)");
+                string choice = Console.ReadLine().ToLower();
+                if (choice == "y")
+                {
+                    Instance.PlayOffline(new Player());
+                }
+                else
+                {
+                    Environment.Exit(0);
+                }
+            }
+
+            return list;
         }
     }
 }

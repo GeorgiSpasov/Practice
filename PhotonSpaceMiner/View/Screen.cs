@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using PhotonSpaceMiner.Model.Contracts;
 using PhotonSpaceMiner.Model;
@@ -14,7 +10,7 @@ namespace PhotonSpaceMiner.View
         public static readonly int screenHight;
         public static readonly int screenWidth;
 
-        public static void SetScreenSize(int hight, int width/*, int refreshRate*/)
+        public static void SetScreenSize(int hight, int width)
         {
             Console.BufferHeight = Console.WindowHeight = hight;
             Console.BufferWidth = Console.WindowWidth = width;
@@ -31,13 +27,13 @@ namespace PhotonSpaceMiner.View
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetCursorPosition(0, 0);
-            Console.WriteLine($"Score: {player1.Score} Position: X:{player1.PlayerPosition.X} Y:{player1.PlayerPosition.Y}");
+            Console.WriteLine($"Score: {player1.Score} {player1.PlayerPosition.ToString()}");
 
             if (player2 != null)
             {
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.SetCursorPosition(30, 0);
-                Console.WriteLine($"Score: {player1.Score} Position: X:{player1.PlayerPosition.X} Y:{player1.PlayerPosition.Y}");
+                Console.WriteLine($"Score: {player2.Score} {player2.PlayerPosition.ToString()}");
             }
         }
     }

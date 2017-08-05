@@ -1,44 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
-using PhotonSpaceMiner.Core.Remote;
-using PhotonSpaceMiner.Utils;
 using PhotonSpaceMiner.Core.Contracts;
-using System.Runtime.Serialization.Formatters.Binary;
+using PhotonSpaceMiner.Core.Remote;
 using PhotonSpaceMiner.Model;
+using PhotonSpaceMiner.Utils;
 
 namespace PhotonSpaceMiner.Remote
 {
     public class PhotonClient : IClient
     {
-        private static readonly IClient instance = new PhotonClient();
-
-        private TcpClient client; //readonly for singleton???
+        private TcpClient client;
         private IPAddress ip;
         private int port;
         private StreamReader sReader;
         private StreamWriter sWriter;
+
+        private Player clientPlayer;
+        private string playerName;
 
         public PhotonClient()
         {
             this.ip = IPAddress.Parse(PhotonIO.ReadSettings("ip"));
             this.port = int.Parse(PhotonIO.ReadSettings("port"));
             this.client = new TcpClient();
-        }
-
-        public static IClient Instance
-        {
-            get
-            {
-                return instance;
-            }
         }
 
         public TcpClient Client
@@ -53,6 +41,30 @@ namespace PhotonSpaceMiner.Remote
             }
         }
 
+        public Player ClientPlayer
+        {
+            get
+            {
+                return this.clientPlayer;
+            }
+            set
+            {
+                this.clientPlayer = value;
+            }
+        }
+
+        public string PlayerName
+        {
+            get
+            {
+                return this.playerName;
+            }
+            set
+            {
+                this.playerName = value;
+            }
+        }
+
         public void ConnectClient()
         {
             while (!client.Connected)
@@ -60,7 +72,7 @@ namespace PhotonSpaceMiner.Remote
                 try
                 {
                     Console.WriteLine("Attempting connection...");
-                    client.Connect(this.ip, port);
+                    client.Connect(this.ip, this.port);
                     this.sReader = new StreamReader(client.GetStream());
                     this.sWriter = new StreamWriter(client.GetStream());
 

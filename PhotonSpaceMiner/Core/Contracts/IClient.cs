@@ -1,11 +1,14 @@
-﻿using PhotonSpaceMiner.Model;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
+
+using PhotonSpaceMiner.Model;
 
 namespace PhotonSpaceMiner.Core.Contracts
 {
     public interface IClient
     {
         TcpClient Client { get; }
+
+        Player ClientPlayer { get; set; }
 
         void ConnectClient();
 

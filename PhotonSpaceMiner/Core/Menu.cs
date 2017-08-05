@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 using PhotonSpaceMiner.Utils;
 
@@ -14,10 +8,10 @@ namespace PhotonSpaceMiner
     {
         public static int Start()
         {
-            PhotonIO.PrintMenu("../../Core/Resources/Start.txt");
+            string path = "../../Core/Resources/Start.txt";
+            PhotonIO.PrintMenu(path);
 
-            int choice = 1;
-            int.TryParse(Console.ReadLine(), out choice);
+            int choice = int.Parse(Console.ReadLine());
             Console.Clear();
 
             return choice;
