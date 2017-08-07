@@ -28,7 +28,7 @@ namespace PhotonSpaceMiner.Model
         private PlayerState state;
         private WeaponChoice weapon;
         private ConsoleColor color;
-        private Position playerPosition;
+        public Position playerPosition;
 
         private int lives;
         private int health;
@@ -76,7 +76,7 @@ namespace PhotonSpaceMiner.Model
             {
                 return this.skin;
             }
-            private set //Set by State, Wepons and Shielded
+            set //Set by State, Wepons and Shielded
             {
                 this.skin = value;
             }

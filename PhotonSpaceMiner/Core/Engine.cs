@@ -93,6 +93,11 @@ namespace PhotonSpaceMiner.Core
                 // Read GameObjects from server and print
                 List<IPrintable> list = ReceiveSerializedList(client);
                 Screen.PrintStats((Player)list[0], (Player)list[1]);
+
+                // Mirror opponent
+                ((Player)list[1]).playerPosition.Y = 1;
+                ((Player)list[1]).Skin = "|<V>|";
+
                 list.ForEach(Screen.PrintObject);
 
                 int pressedKey = ReadPressedKey();
