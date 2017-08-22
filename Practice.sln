@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alpha_2017_03.SpellCaster", "Alpha_2017_03.SpellCaster\Alpha_2017_03.SpellCaster.csproj", "{D8EBBDC5-EC64-4606-93E9-844D5FCF7FB2}"
 EndProject
@@ -50,6 +50,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR0116.BirthdayChocolate", "HR0116.BirthdayChocolate\HR0116.BirthdayChocolate.csproj", "{28842843-BD0D-4940-A9EA-0E1AC5A1E084}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotonSpaceMiner", "PhotonSpaceMiner\PhotonSpaceMiner.csproj", "{6156E54B-4087-4304-ADB0-76252D8ACEE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accounting", "Accounting\Accounting.csproj", "{9444CF16-88E3-4A21-97FA-B366C8D7A56C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -137,6 +139,10 @@ Global
 		{6156E54B-4087-4304-ADB0-76252D8ACEE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6156E54B-4087-4304-ADB0-76252D8ACEE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6156E54B-4087-4304-ADB0-76252D8ACEE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9444CF16-88E3-4A21-97FA-B366C8D7A56C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9444CF16-88E3-4A21-97FA-B366C8D7A56C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9444CF16-88E3-4A21-97FA-B366C8D7A56C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9444CF16-88E3-4A21-97FA-B366C8D7A56C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,5 +169,8 @@ Global
 		{06E4C415-7C4B-4ECA-A34A-BC4D65B538AD} = {B151371E-D87A-4AE4-AEC1-AC4420DE9BF1}
 		{CE5BEDFB-F84F-462A-8932-607C44CC3B65} = {B151371E-D87A-4AE4-AEC1-AC4420DE9BF1}
 		{28842843-BD0D-4940-A9EA-0E1AC5A1E084} = {B151371E-D87A-4AE4-AEC1-AC4420DE9BF1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {991AEABD-58CF-45B9-8EDD-F7910CC15A57}
 	EndGlobalSection
 EndGlobal
