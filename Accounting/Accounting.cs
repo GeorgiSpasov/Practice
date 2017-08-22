@@ -47,7 +47,10 @@ namespace Accounting
                 new Expenditure("Markers", 50)
             };
 
-            var paymentsPerWorker = receipt.Where(e=>e is Worker).GroupBy(w => (w as Worker).Cost);
+            var paymentsPerWorker = receipt.Where(e => e is Worker)
+                .GroupBy(w => (w as Worker).FirstName)
+                .Select(n => n.Sum(w => w.Cost));
+
             foreach (var item in paymentsPerWorker)
             {
                 Console.WriteLine(item);
