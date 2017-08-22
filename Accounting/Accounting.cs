@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Wintellect.PowerCollections;
 
 namespace Accounting
 {
@@ -20,15 +17,15 @@ namespace Accounting
         public decimal Cost { get; set; }
     }
 
-    class Expenditure : IPayable
+    class Material : IPayable
     {
-        public Expenditure(string expence, decimal cost)
+        public Material(string expence, decimal cost)
         {
-            this.Expence = expence;
+            this.Name = expence;
             this.Cost = cost;
         }
 
-        public string Expence { get; set; }
+        public string Name { get; set; }
         public decimal Cost { get; set; }
     }
 
@@ -36,25 +33,31 @@ namespace Accounting
     {
         static void Main(string[] args)
         {
-            List<IPayable> receipt = new List<IPayable>()
+            List<IPayable> payments = new List<IPayable>()
             {
-                new Worker("Tosho", "Toshev", 950),
-                new Worker("Sasho", "Toshev", 1050),
-                new Worker("Tosho", "Toshev", 950),
-                new Worker("Sasho", "Toshev", 950),
-                new Expenditure("Printer paper", 250),
-                new Expenditure("Fax paper", 150),
-                new Expenditure("Markers", 50)
+                new Worker("Max", "Smith", 950),
+                new Worker("Sam", "Wise", 1050),
+                new Worker("Max", "Smith", 950),
+                new Worker("Sam", "Wise", 950),
+                new Worker("Sam", "Tylor", 950),
+                new Worker("Tom", "Ton", 1950),
+                new Worker("Sam", "Donovan", 950),
+                new Material("Printer paper", 250),
+                new Material("Fax paper", 150),
+                new Material("Markers", 50)
             };
 
-            var paymentsPerWorker = receipt.Where(e => e is Worker)
-                .GroupBy(w => (w as Worker).FirstName)
-                .Select(n => n.Sum(w => w.Cost));
-
-            foreach (var item in paymentsPerWorker)
-            {
-                Console.WriteLine(item);
-            }
+            payments.Where(e => e is Worker)
+                .OrderBy(w => ((Worker)w).FirstName)
+                .ThenBy(w => ((Worker)w).LastName)
+                .GroupBy(w => ((Worker)w).FirstName + " " + ((Worker)w).LastName)
+                //.OrderByDescending(g => g.Count()) // Times payed
+                //.ThenByDescending(g => g.Sum(w => w.Cost))
+                .ToDictionary(g => g.Key, g => g.Sum(w => w.Cost))
+                .OrderByDescending(w => w.Value)
+                .ThenBy(w => w.Key)
+                .ToList()
+                .ForEach(w => Console.WriteLine(w));
         }
     }
 }
