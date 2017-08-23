@@ -51,11 +51,8 @@ namespace Accounting
                 .OrderBy(w => ((Worker)w).FirstName)
                 .ThenBy(w => ((Worker)w).LastName)
                 .GroupBy(w => ((Worker)w).FirstName + " " + ((Worker)w).LastName)
-                //.OrderByDescending(g => g.Count()) // Times payed
-                //.ThenByDescending(g => g.Sum(w => w.Cost))
-                .ToDictionary(g => g.Key, g => g.Sum(w => w.Cost))
-                .OrderByDescending(w => w.Value)
-                .ThenBy(w => w.Key)
+                .Select(g => new { Name = g.Key, Total = g.Sum(w => w.Cost) })
+                .OrderByDescending(w => w.Total)
                 .ToList()
                 .ForEach(w => Console.WriteLine(w));
         }
