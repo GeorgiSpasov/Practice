@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.8
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alpha_2017_03.SpellCaster", "Alpha_2017_03.SpellCaster\Alpha_2017_03.SpellCaster.csproj", "{D8EBBDC5-EC64-4606-93E9-844D5FCF7FB2}"
 EndProject
@@ -52,6 +52,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotonSpaceMiner", "PhotonSpaceMiner\PhotonSpaceMiner.csproj", "{6156E54B-4087-4304-ADB0-76252D8ACEE4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accounting", "Accounting\Accounting.csproj", "{9444CF16-88E3-4A21-97FA-B366C8D7A56C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DSA", "DSA\DSA.csproj", "{83D2A546-065E-401F-8B1E-41E172F40D81}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -143,6 +145,10 @@ Global
 		{9444CF16-88E3-4A21-97FA-B366C8D7A56C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9444CF16-88E3-4A21-97FA-B366C8D7A56C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9444CF16-88E3-4A21-97FA-B366C8D7A56C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83D2A546-065E-401F-8B1E-41E172F40D81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83D2A546-065E-401F-8B1E-41E172F40D81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83D2A546-065E-401F-8B1E-41E172F40D81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83D2A546-065E-401F-8B1E-41E172F40D81}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
